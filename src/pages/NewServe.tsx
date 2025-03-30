@@ -7,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { getServeAttemptsCount, updateCaseStatus } from "@/utils/supabaseStorage";
 import { useToast } from "@/hooks/use-toast";
 import { isGeolocationCoordinates } from "@/utils/gps";
+import { supabase } from "@/lib/supabase";
 
 interface NewServeProps {
   clients: ClientData[];
@@ -44,13 +45,36 @@ const NewServe: React.FC<NewServeProps> = ({
       if (paramClientId && paramCaseNumber) {
         try {
           console.log(`Fetching attempt count for client ${paramClientId} case ${paramCaseNumber}`);
+          
+          const { data: caseData, error: caseError } = await supabase
+            .from('client_cases')
+            .select('status')
+            .eq('client_id', paramClientId)
+            .eq('case_number', paramCaseNumber)
+            .single();
+            
+          if (caseError) {
+            console.error("Error fetching case status:", caseError);
+            setIsLoading(false);
+            return;
+          }
+          
+          if (caseData && caseData.status === 'Closed') {
+            toast({
+              title: "Case is closed",
+              description: "This case has been marked as closed and cannot be served.",
+              variant: "destructive"
+            });
+            navigate("/clients");
+            return;
+          }
+          
           const count = await getServeAttemptsCount(paramClientId, paramCaseNumber);
           console.log(`Found ${count} previous attempts`);
           setCaseAttempts(count);
         } catch (error) {
           console.error("Error fetching attempt count:", error);
           console.log("Could not retrieve previous serve attempts");
-          setIsLoading(false);
         } finally {
           setIsLoading(false);
         }
@@ -61,7 +85,7 @@ const NewServe: React.FC<NewServeProps> = ({
     };
     
     fetchAttemptCount();
-  }, [paramClientId, paramCaseNumber]);
+  }, [paramClientId, paramCaseNumber, navigate, toast]);
 
   const handleServeComplete = async (serveData: ServeAttemptData) => {
     console.log("Serve complete, data:", serveData);

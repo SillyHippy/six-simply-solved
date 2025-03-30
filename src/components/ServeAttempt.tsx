@@ -108,7 +108,8 @@ const ServeAttempt: React.FC<ServeAttemptProps> = ({
       try {
         const { data, error } = await supabase
           .from('client_cases')
-          .select('case_number, case_name, home_address, work_address, client_id, clients(name)')
+          .select('case_number, case_name, home_address, work_address, client_id, clients(name), status')
+          .neq('status', 'Closed') // Filter out closed cases
           .order('created_at', { ascending: false });
         
         if (error) {
@@ -157,8 +158,9 @@ const ServeAttempt: React.FC<ServeAttemptProps> = ({
         try {
           const { data, error } = await supabase
             .from('client_cases')
-            .select('case_number, case_name, home_address, work_address')
+            .select('case_number, case_name, home_address, work_address, status')
             .eq('client_id', selectedClient.id)
+            .neq('status', 'Closed') // Filter out closed cases
             .order('created_at', { ascending: false });
           
           if (error) {
