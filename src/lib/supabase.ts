@@ -1,8 +1,9 @@
+
 import { createClient } from '@supabase/supabase-js';
 
 // Get environment variables with fallbacks for the Supabase project
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://qdjdmicjzmpggctzjsrf.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkamRtaWNqem1wZ2djdHpqc3JmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI3MTAxODIsImV4cCI6MjA1ODI4NjE4Mn0.St9w_1cd-8yr0vsL6tYQ0MgiQJeqV7-fw6TIursi0I8';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://cvoblhissmmdvaocbniy.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2b2JsaGlzc21tZHZhb2Nibml5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMwMDk4NzMsImV4cCI6MjA1ODU4NTg3M30.mDPhySM_Ituf--jbAa70-f7QLyXqSa2uHm3J-gLlheI';
 
 // Check if environment variables are available and log a more specific message
 if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
