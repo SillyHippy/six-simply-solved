@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/components/ui/toaster";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function SupabaseConnectionTest() {
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'error'>('checking');
@@ -26,27 +27,22 @@ export function SupabaseConnectionTest() {
       if (error) {
         console.error("Supabase connection error:", error);
         setConnectionStatus('error');
-        toast({
-          title: "Database connection error",
-          description: error.message,
-          variant: "destructive"
+        toast.error("Database connection error", {
+          description: error.message
         });
       } else {
         console.log("Successfully connected to Supabase:", data);
         setConnectionStatus('connected');
         setClients(data || []);
-        toast({
-          title: "Connected to database",
-          description: `Found ${data?.length || 0} clients in the database`,
+        toast.success("Connected to database", {
+          description: `Found ${data?.length || 0} clients in the database`
         });
       }
     } catch (err) {
       console.error("Unexpected error:", err);
       setConnectionStatus('error');
-      toast({
-        title: "Unexpected error",
-        description: err instanceof Error ? err.message : "Failed to connect to database",
-        variant: "destructive"
+      toast.error("Unexpected error", {
+        description: err instanceof Error ? err.message : "Failed to connect to database"
       });
     } finally {
       setIsLoading(false);
@@ -70,7 +66,15 @@ export function SupabaseConnectionTest() {
           </p>
         </div>
         
-        {connectionStatus === 'connected' && clients.length > 0 && (
+        {isLoading && (
+          <div className="space-y-2 mt-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+            <Skeleton className="h-4 w-4/6" />
+          </div>
+        )}
+        
+        {connectionStatus === 'connected' && clients.length > 0 && !isLoading && (
           <div className="mt-4">
             <p className="font-medium">Found {clients.length} clients:</p>
             <ul className="mt-2 space-y-1 pl-5 list-disc">
@@ -81,7 +85,7 @@ export function SupabaseConnectionTest() {
           </div>
         )}
         
-        {connectionStatus === 'connected' && clients.length === 0 && (
+        {connectionStatus === 'connected' && clients.length === 0 && !isLoading && (
           <p className="text-yellow-600">Connected successfully, but no clients found in database.</p>
         )}
         
