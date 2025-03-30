@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,7 +21,6 @@ import {
   updateServeAttempt
 } from "./lib/supabase";
 import { toast } from "@/hooks/use-toast";
-import { SupabaseConnectionTest } from "./components/SupabaseConnectionTest";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -473,12 +471,7 @@ const AnimatedRoutes = () => {
       <CSSTransition key={location.key} classNames="page" timeout={400}>
         <Routes location={location}>
           <Route path="/" element={<Layout />}>
-            <Route index element={<>
-              <div className="mb-6">
-                <SupabaseConnectionTest />
-              </div>
-              <Dashboard clients={clients} serves={serves} />
-            </>} />
+            <Route index element={<Dashboard clients={clients} serves={serves} />} />
             <Route path="new-serve" element={
               <NewServe 
                 clients={clients} 

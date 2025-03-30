@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +22,6 @@ const Index = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if Supabase is configured
     const configured = isSupabaseConfigured();
     setIsSupabaseReady(configured);
     
@@ -31,7 +29,6 @@ const Index = () => {
       setError("Supabase configuration is missing. Email functionality may not work.");
     }
     
-    // Log environment details for debugging
     console.log("Environment check:");
     console.log("- Supabase configured:", configured);
     console.log("- URL:", window.location.href);
@@ -60,7 +57,6 @@ const Index = () => {
         bodyLength: emailBody.length
       });
       
-      // Pass the recipient email - our utility will automatically add info@justlegalsolutions.org
       const result = await sendEmail({
         to: recipientEmail,
         subject: subject,
